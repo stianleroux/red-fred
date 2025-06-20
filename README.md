@@ -1,8 +1,22 @@
 # 🚀 Martian Robots Simulator
 
-Interactive frontend + API-based simulator for the [Martian Robots problem](https://github.com/stianleroux/red-fred), built with [Astro](https://astro.build/), TypeScript, and TailwindCSS.
+A fun visualisation and simulation of the classic Martian Robots programming challenge — built with [Astro](https://astro.build), plain JavaScript, and HTML Canvas.
+
+## 🔍 Why Astro?
+
+I chose Astro because it's quick to get started with and simple to deploy — especially to Vercel. While I prefer working in .NET for backend-heavy projects, deployment can be trickier, and Astro was the right tool for this job.
+
+## 🧠 Architecture
+
+- **API Endpoint:** `/api/simulate` handles robot instruction input and mimics a backend processing the simulation.
+- **Frontend:** Uses HTML Canvas + `simulate.js` to draw the grid, robot movement, and scent markers.
+- **JS:** Pure Vanilla JavaScript was used intentionally to showcase simplicity and make the logic easy to follow.
+- **Styling:** TailwindCSS for clean, responsive UI.
+
+There's plenty of room for improvement, but the focus was to get a working, maintainable version out - with a clean structure and quality baseline.
 
 Supports both:
+
 - 📦 API-based logic via `/api/simulate`
 - 🎨 Visual simulation on `<canvas>` using JavaScript
 
