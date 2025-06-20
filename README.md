@@ -75,6 +75,12 @@ Response:
 
 Used when running server-side-only processing (e.g. in headless environments).
 
+Unit Test - Vitest
+
+```bash
+npx vitest run
+```
+
 ---
 
 ### 🖥️ Frontend Simulation
