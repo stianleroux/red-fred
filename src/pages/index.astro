@@ -1,11 +1,20 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "../layouts/Layout.astro";
+import Simulator from "../components/Simulator.astro";
 ---
 
 <Layout>
-	<Welcome />
+	<section class="relative flex flex-col items-center justify-center min-h-[60vh] bg-gradient-to-br from-indigo-900 via-sky-900 to-black text-white overflow-hidden">
+		<div class="absolute inset-0 pointer-events-none">
+			<div class="absolute w-[120vw] h-[120vw] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-radial from-sky-400/20 via-indigo-500/10 to-transparent rounded-full blur-3xl"></div>
+		</div>
+		<div class="relative z-10 flex flex-col items-center text-center py-16 px-4">
+			<h1 class="text-4xl md:text-6xl font-extrabold tracking-tight drop-shadow-lg mb-4">Martian Robots Simulator</h1>
+			<p class="max-w-2xl text-lg md:text-2xl text-sky-200 mb-8">Visualize and control robots on a Martian grid. Enter your instructions, step through the simulation, and see the results in real time!</p>
+			<a href="#simulator" class="inline-block bg-sky-500 hover:bg-sky-400 text-white font-semibold px-8 py-3 rounded-lg shadow-lg transition-all duration-200">Get Started</a>
+		</div>
+	</section>
+	<section id="simulator" class="container mx-auto px-4 py-12">
+		<Simulator />
+	</section>
 </Layout>

@@ -1,0 +1,53 @@
+---
+const defaultInput = `5 3
+1 1 E
+RFRFRFRF
+3 2 N
+FRRFLLFFRRFLL
+0 3 W
+LLFFFLFLFL`;
+---
+
+<div class="simulator bg-white/90 shadow-xl rounded-xl p-6 md:p-10 max-w-6xl mx-auto mt-10">
+	<div class="grid md:grid-cols-2 gap-8">
+		<!-- Grid Canvas -->
+		<div class="flex justify-center items-center">
+			<canvas id="marsGrid" width="500" height="500" class="w-full max-w-[500px] aspect-square border-4 border-sky-300 rounded-lg shadow bg-gradient-to-br from-sky-50 via-sky-100 to-white"></canvas>
+		</div>
+
+		<!-- Controls & Input -->
+		<div class="flex flex-col gap-4">
+			<p class="text-sky-700 text-sm md:text-base leading-relaxed">
+				Paste the input format below and click <strong>"Initialize"</strong> to set up the grid.
+			</p>
+
+			<textarea id="inputArea" class="w-full h-40 p-3 rounded-md border border-sky-300 bg-sky-50 font-mono text-sky-900 resize-none focus:ring-2 focus:ring-sky-400">{defaultInput}</textarea>
+			<p id="inputError" class="text-red-600 text-sm font-medium mt-1 hidden"></p>
+
+			<div class="flex flex-wrap gap-3 mt-4">
+				<button id="initBtn" class="flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white font-medium rounded-md shadow transition disabled:opacity-50 disabled:pointer-events-none"> ⚙️ Initialize Grid </button>
+
+				<button id="simulateBtn" disabled class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-medium rounded-md shadow transition disabled:opacity-50 disabled:pointer-events-none"> ▶️ Start Simulation </button>
+
+				<button id="stepBtn" disabled class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-medium rounded-md shadow transition disabled:opacity-50 disabled:pointer-events-none"> ⏭️ Step </button>
+
+				<button id="resetBtn" disabled class="flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white font-medium rounded-md shadow transition disabled:opacity-50 disabled:pointer-events-none"> 🔄 Reset </button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Output -->
+	<div class="output-container mt-10">
+		<h3 class="text-lg font-semibold text-sky-900 mb-2">Output:</h3>
+		<pre id="outputArea" class="bg-sky-50 border border-sky-200 rounded-md p-4 text-sky-800 font-mono min-h-[60px] whitespace-pre-wrap">Waiting for input...</pre>
+	</div>
+</div>
+
+<!-- Tailwind Shortcut: Common Button Styling -->
+<style>
+	.btn-sim {
+		@apply px-4 py-2 text-white font-semibold rounded shadow transition disabled:opacity-50 disabled:cursor-not-allowed;
+	}
+</style>
+
+<script type="module" src="/simulate.js"></script>
