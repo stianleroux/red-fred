@@ -1,48 +1,165 @@
-# Astro Starter Kit: Basics
+# 🚀 Martian Robots Simulator
 
-```sh
-npm create astro@latest -- --template basics
-```
+Interactive frontend + API-based simulator for the [Martian Robots problem](https://github.com/stianleroux/red-fred), built with [Astro](https://astro.build/), TypeScript, and TailwindCSS.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+Supports both:
+- 📦 API-based logic via `/api/simulate`
+- 🎨 Visual simulation on `<canvas>` using JavaScript
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+> Used internally across teams to demonstrate grid-based simulation, animation, and isolated logic processing.
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+---
 
-## 🚀 Project Structure
+## 📁 Project Structure
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
+```atx
 ├── public/
-│   └── favicon.svg
+│ └── simulate.js # Frontend simulation logic (canvas, buttons)
 ├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
+│ ├── pages/
+│ │ ├── index.astro # Main UI with Tailwind + canvas
+│ │ └── api/
+│ │ └── simulate.ts # API endpoint for server-side simulation logic
+│ └── styles/
+├── astro.config.mjs
 └── package.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 🧠 Problem Definition
 
-## 🧞 Commands
+The surface of Mars is modelled as a 2D grid (max 50x50). Robots are given:
 
-All commands are run from the root of the project, from a terminal:
+- A starting position: `x y direction`
+- A movement string: `LRF` instructions
+- Maximum grid of 50
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Robots can fall off the grid, leaving a "scent" at their last valid position. Future robots ignore instructions that would lead them off at scented points.
 
-## 👀 Want to learn more?
+---
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## ⚙️ Setup Locally
+
+```bash
+git clone https://github.com/stianleroux/red-fred.git
+cd red-fred
+npm install
+```
+
+Run the dev server:
+
+```bash
+npm run dev
+```
+
+Open your browser at http://localhost:4321
+
+### 🧪 API Endpoint: /api/simulate
+
+Method: POST
+URL: /api/simulate
+Request Body:
+
+```json
+{
+  "input": "5 3\n1 1 E\nRFRFRFRF\n..."
+}
+```
+
+Response:
+
+```json
+{
+  "result": "1 1 E\n3 3 N LOST\n2 3 S"  
+}
+```
+
+Used when running server-side-only processing (e.g. in headless environments).
+
+---
+
+### 🖥️ Frontend Simulation
+
+The logic for canvas animation, grid drawing, and button control is in:
+
+public/simulate.js
+
+This handles:
+
+- Initialising the grid
+- Step-by-step robot movement
+- Drawing scents, directions, LOST status
+- Highlighting input validation errors
+
+Main buttons:
+
+- Button - Action
+- Initialise - Parses input, draws grid
+- Start/Pause - Runs simulation live
+- Step - Steps through one command
+- Reset - Reloads the app completely
+
+---
+
+### 🚨 Input Validation
+
+Input must follow strict format:
+
+```html
+<grid width> <grid height>
+<x> <y> <DIRECTION>
+<instructions>
+```
+
+#### Rules
+
+- Max grid: 50x50
+- Only L, R, F in instructions
+- Errors are shown below the input box
+- Faulty lines are auto-highlighted
+
+---
+
+## 🚀 Deploy to Vercel
+
+Already optimised for Vercel (zero-config):
+
+```bash
+npx vercel
+
+or
+
+vercel --prod
+```
+
+---
+
+### 📦 Build for Production
+
+```bash
+npm run build
+```
+
+Output goes to dist/ (SSR enabled if needed).
+
+---
+
+## 🤝 Contributing
+
+### Team Usage Guidelines:
+
+Keep input parsing and output logic isolated
+
+Any new movement commands (e.g. JUMP) must be added to both:
+
+- [ ] src/pages/api/simulate.ts
+- [ ] public/simulate.js
+
+Keep canvas and API logic separate — test independently
+
+PRs welcome via GitHub Issues.
+
+---
+
+## 📄 License
+
+MIT (c) Stian le Roux
