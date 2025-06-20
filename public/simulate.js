@@ -334,24 +334,19 @@ function highlightLine(textarea, lineNumber) {
 document.getElementById('simulateBtn')?.addEventListener('click', async () => {
   const button = document.getElementById('simulateBtn');
   const stepButton = document.getElementById('stepBtn');
+
+  button.textContent = 'Pause';
+  stepButton.disabled = true;
   
-  if (button.textContent === 'Start Simulation') {
-    button.textContent = 'Pause';
-    stepButton.disabled = true;
-    
-    while (button.textContent === 'Pause') {
-      const hasMore = simulateStep();
-      if (!hasMore) {
-        button.textContent = 'Start Simulation';
-        button.disabled = true;
-        stepButton.disabled = true;
-        break;
-      }
-      await new Promise(resolve => setTimeout(resolve, 500));
+  while (button.textContent === 'Pause') {
+    const hasMore = simulateStep();
+    if (!hasMore) {
+      button.textContent = 'Start Simulation';
+      button.disabled = true;
+      stepButton.disabled = true;
+      break;
     }
-  } else {
-    button.textContent = 'Start Simulation';
-    stepButton.disabled = false;
+    await new Promise(resolve => setTimeout(resolve, 500));
   }
 });
 
