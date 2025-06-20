@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 class MarsGrid {
   constructor(canvas) {
     this.canvas = canvas;
@@ -97,6 +98,7 @@ class MarsGrid {
     );
     ctx.stroke();
 
+    ///part of the requirements 
     if (isLost) {
       // Draw X for lost robots
       ctx.strokeStyle = 'red';
@@ -127,66 +129,70 @@ class MarsGrid {
 let grid = null;
 let currentSimulation = null;
 
-document.getElementById('initBtn')?.addEventListener('click', () => {
-  const inputEl = document.getElementById('inputArea');
-  const errorEl = document.getElementById('inputError');
-  const input = document.getElementById('inputArea')?.value || '';
-  try {
-    validateInput(input);
-  } catch (err) {
-    console.error(err);
-    errorEl.textContent = `${err.message}${err.line !== undefined ? ` (Line ${err.line + 1})` : ''}`;
-    errorEl.classList.remove('hidden');
+if (typeof document !== 'undefined') {
+  document.getElementById('initBtn')?.addEventListener('click', () => {
+    const inputEl = document.getElementById('inputArea');
+    const errorEl = document.getElementById('inputError');
+    const input = document.getElementById('inputArea')?.value || '';
 
-    // Optional: highlight the line in the textarea
-    highlightLine(inputEl, err.line);
-  }
-  const canvas = document.getElementById('marsGrid');
-  const outputEl = document.getElementById('outputArea');
+    //call validate for issues
+    try {
+      validateInput(input);
+    } catch (err) {
+      console.error(err);
+      errorEl.textContent = `${err.message}${err.line !== undefined ? ` (Line ${err.line + 1})` : ''}`;
+      errorEl.classList.remove('hidden');
 
-  try {
-    // Parse first line for grid size
-    const lines = input.trim().split('\n');
-    const [width, height] = lines[0].split(' ').map(Number);
-    
-    // Initialize grid
-    grid = new MarsGrid(canvas);
-    grid.initialize(width, height);
-    
-    // Enable simulation controls
-    document.getElementById('simulateBtn').disabled = false;
-    document.getElementById('stepBtn').disabled = false;
-    document.getElementById('resetBtn').disabled = false;
-    
-    // Store simulation data
-    currentSimulation = {
-      width,
-      height,
-      commands: [],
-      currentRobot: 0,
-      scents: new Set(),
-      results: []
-    };
-
-    // Parse robot commands
-    for (let i = 1; i < lines.length; i += 2) {
-      const [x, y, dir] = lines[i].split(' ');
-      const instructions = lines[i + 1];
-      currentSimulation.commands.push({
-        x: parseInt(x),
-        y: parseInt(y),
-        direction: dir,
-        instructions,
-        currentStep: 0
-      });
+      // Optional: highlight the line in the textarea
+      highlightLine(inputEl, err.line);
     }
+    const canvas = document.getElementById('marsGrid');
+    const outputEl = document.getElementById('outputArea');
 
-    outputEl.textContent = 'Grid initialized. Click "Start Simulation" or "Step" to begin.';
-  } catch (e) {
-    outputEl.textContent = 'Error initializing grid: ' + e.message;
-    console.error(e);
-  }
-});
+    try {
+      // Parse first line for grid size
+      const lines = input.trim().split('\n');
+      const [width, height] = lines[0].split(' ').map(Number);
+      
+      // Initialize grid
+      grid = new MarsGrid(canvas);
+      grid.initialize(width, height);
+      
+      // Enable simulation controls
+      document.getElementById('simulateBtn').disabled = false;
+      document.getElementById('stepBtn').disabled = false;
+      document.getElementById('resetBtn').disabled = false;
+      
+      // Store simulation data
+      currentSimulation = {
+        width,
+        height,
+        commands: [],
+        currentRobot: 0,
+        scents: new Set(),
+        results: []
+      };
+
+      // Parse robot commands
+      for (let i = 1; i < lines.length; i += 2) {
+        const [x, y, dir] = lines[i].split(' ');
+        const instructions = lines[i + 1];
+        currentSimulation.commands.push({
+          x: parseInt(x),
+          y: parseInt(y),
+          direction: dir,
+          instructions,
+          currentStep: 0
+        });
+      }
+
+      outputEl.textContent = 'Grid initialized. Click "Start Simulation" or "Step" to begin.';
+    } catch (e) {
+      outputEl.textContent = 'Error initializing grid: ' + e.message;
+      console.error(e);
+    }
+  });
+}
 
 // Simulate one step
 function simulateStep() {

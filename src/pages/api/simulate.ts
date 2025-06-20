@@ -1,6 +1,6 @@
 // src/pages/api/simulate.ts
 import type { APIRoute } from "astro";
-import { z } from 'zod';
+import { z } from "zod";
 
 const directions = ["N", "E", "S", "W"] as const;
 const moveOffsets = {
@@ -10,8 +10,8 @@ const moveOffsets = {
 	W: [-1, 0],
 };
 
-function turn(dir: string, command: string): string {
-	let idx = directions.indexOf(dir as any);
+function turn(dir: (typeof directions)[number], command: "L" | "R"): (typeof directions)[number] {
+	let idx = directions.indexOf(dir);
 	if (command === "L") idx = (idx + 3) % 4;
 	if (command === "R") idx = (idx + 1) % 4;
 	return directions[idx];
@@ -32,13 +32,13 @@ function simulateInput(inputText: string): string {
 		const [xStr, yStr, dir] = lines[i].split(" ");
 		let x = +xStr,
 			y = +yStr,
-			direction = dir as keyof typeof moveOffsets;
+			direction = dir as (typeof directions)[number];
 		const instructions = lines[i + 1];
 		let lost = false;
 
 		for (const cmd of instructions) {
 			if (cmd === "L" || cmd === "R") {
-				direction = turn(direction, cmd) as keyof typeof moveOffsets;
+				direction = turn(direction, cmd as "L" | "R");
 			} else if (cmd === "F") {
 				const [dx, dy] = moveOffsets[direction];
 				const nx = x + dx,
@@ -72,10 +72,7 @@ export const POST: APIRoute = async ({ request }) => {
 		const schema = z.object({ input: z.string().min(1) });
 		const parsed = schema.safeParse(data);
 		if (!parsed.success) {
-			return new Response(
-				JSON.stringify({ error: "Invalid input format", issues: parsed.error.issues, received: bodyText }),
-				{ status: 400, headers: { "Content-Type": "application/json" } }
-			);
+			return new Response(JSON.stringify({ error: "Invalid input format", issues: parsed.error.issues, received: bodyText }), { status: 400, headers: { "Content-Type": "application/json" } });
 		}
 		const input = parsed.data.input;
 		const result = simulateInput(input);
@@ -83,7 +80,7 @@ export const POST: APIRoute = async ({ request }) => {
 			headers: { "Content-Type": "application/json" },
 		});
 	} catch (e) {
-		return new Response(JSON.stringify({ error: "Invalid or missing JSON input.", received: bodyText }), {
+		return new Response(JSON.stringify({ error: `Invalid or missing JSON input. ${e.message}`, received: bodyText }), {
 			headers: { "Content-Type": "application/json" },
 			status: 400,
 		});

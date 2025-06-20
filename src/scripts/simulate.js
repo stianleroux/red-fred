@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 document.getElementById('simulateBtn')?.addEventListener('click', async () => {
     const input = document.getElementById('inputArea')?.value || '';
     const outputEl = document.getElementById('outputArea');
